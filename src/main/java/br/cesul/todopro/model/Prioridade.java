@@ -29,18 +29,24 @@ package br.cesul.todopro.model;
 // cor sozinhas (a tela já tá pronta esperando esses getters).
 
 public enum Prioridade {
-    BAIXA,
-    MEDIA,
-    ALTA;
+    BAIXA(1, "#c9f5c9"),
+    MEDIA(2, "#fff3b0"),
+    ALTA(3, "#f5c9c9");
 
-    // provisório - trocar pelo getter do atributo
-    public int getPeso(){
-        return 0;
+    private final int peso;
+    private final String corCss;
+
+    Prioridade(int peso, String corCss) {
+        this.peso = peso;
+        this.corCss = corCss;
     }
 
-    // provisório - trocar pelo getter do atributo
-    public String getCorCss(){
-        return "#ffffff";
+    public int getPeso() {
+        return peso;
+    }
+
+    public String getCorCss() {
+        return corCss;
     }
 
     public String rotulo(){

@@ -32,7 +32,11 @@ public enum Status {
     // junto do dado. A UI e o DAO só chamam .proximo() sem
     // saber qual é a ordem - se um dia o ciclo mudar, mexe
     // só aqui.
-    public Status proximo(){
-        return this; // provisório - substituir pelo switch
+    public Status proximo() {
+        return switch (this) {
+            case PENDENTE -> EM_ANDAMENTO;
+            case EM_ANDAMENTO -> CONCLUIDA;
+            case CONCLUIDA -> CONCLUIDA;
+        };
     }
 }

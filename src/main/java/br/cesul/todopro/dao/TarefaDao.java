@@ -63,14 +63,33 @@ public class TarefaDao {
     public void insert(String titulo, String descricao,
                        Categoria cat, Prioridade pri){
         // TODO
+        if (titulo == null || titulo.isBlank()) {
+            return;
+        }
+
+        Document novaTarefa = new Document()
+                .append("titulo", titulo)
+                .append("descricao", descricao)
+                .append("categoria", cat.name())
+                .append("prioridade", pri.name())
+                .append("status", Status.PENDENTE.name())
+                .append("dataCriacao", LocalDateTime.now().toString());
+
+        col.insertOne(novaTarefa);
     }
 
     // TODO 4 - apagar uma tarefa.
     // Igualzinho ao delete do catálogo: col.deleteOne com
     // eq("_id", new ObjectId(id)).
-    public void delete(String id){
+    public void delete(String id) {
         // TODO
+        if (id == null || id.isBlank()) {
+            return;
+        }
+
+        col.deleteOne(eq("_id", new ObjectId(id)));
     }
+
 
     // Busca de tarefas. Por enquanto devolve todas; os filtros entram
     // mais pra frente.
@@ -94,6 +113,21 @@ public class TarefaDao {
     //         grava com updateOne + set("status", novo.name())
     public void avancarStatus(String id){
         // TODO
+        if (id == null || id.isBlank()) {
+            return;
+        }
+
+        Document d = col.find(eq("_id", new ObjectId(id))).first();
+
+
+        if (d != null) {
+            Status atual = Status.valueOf(d.getString("status"));
+            Status novoStatus = atual.proximo();
+            col.updateOne(
+                    eq("_id", new ObjectId(id)),
+                    set("status", novoStatus.name())
+            );
+        }
     }
 
     // Contagem de tarefas por status. Por enquanto devolve vazio.

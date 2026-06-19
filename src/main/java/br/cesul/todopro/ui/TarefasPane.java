@@ -170,12 +170,26 @@ public class TarefasPane extends BorderPane implements Refreshable {
     // 4 - refresh()
     private void avancar(){
         // TODO
+        Tarefa sel = table.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            return;
+        }
+
+        dao.avancarStatus(sel.id());
+        refresh();
     }
 
     // TODO 7 - excluir a tarefa selecionada.
     // Igual ao de cima trocando a chamada por dao.delete(sel.id()).
     private void excluir(){
         // TODO
+        Tarefa sel = table.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            return;
+        }
+
+        dao.delete(sel.id());
+        refresh();
     }
 
     // Recarrega a tabela com o que o dao.findFiltrado devolve.
