@@ -36,6 +36,14 @@ public class StatsPane extends BorderPane implements Refreshable {
 
     @Override
     public void refresh(){
-        // os gráficos são preenchidos mais pra frente
+        chartStatus.getData().clear();
+
+        dao.countByStatus().forEach((rotulo, qt) ->
+                chartStatus.getData().add(new PieChart.Data(rotulo, qt)));
+
+        chartPrioridade.getData().clear();
+
+        dao.countByPrioridade().forEach((rotulo, qt) ->
+                chartPrioridade.getData().add(new PieChart.Data(rotulo, qt)));
     }
 }

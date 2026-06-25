@@ -22,6 +22,7 @@ import java.util.Map;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
+import java.util.stream.Collectors;
 
 public class TarefaDao {
 
@@ -91,10 +92,14 @@ public class TarefaDao {
     }
 
 
-    // Busca de tarefas. Por enquanto devolve todas; os filtros entram
-    // mais pra frente.
+
     public List<Tarefa> findFiltrado(Status st, Prioridade pri, Categoria cat){
-        return findAll();
+        return findAll().stream()
+                .filter(t -> st  == null || t.status()     == st)
+                .filter(t -> pri == null || t.prioridade() == pri)
+                .filter(t -> cat == null || t.categoria()  == cat)
+                .sorted((t1, t2) -> Integer.compare(t2.prioridade().getPeso(), t1.prioridade().getPeso()))
+                .toList();
     }
 
     // TODO 5 - avançar o status de uma tarefa.
@@ -130,13 +135,17 @@ public class TarefaDao {
         }
     }
 
-    // Contagem de tarefas por status. Por enquanto devolve vazio.
     public Map<String, Long> countByStatus(){
-        return new HashMap<>();
+        return findAll().stream()
+                .collect(Collectors.groupingBy(
+                        t -> t.status().rotulo(),
+                        Collectors.counting()));
     }
 
-    // Contagem de tarefas por prioridade. Por enquanto devolve vazio.
     public Map<String, Long> countByPrioridade(){
-        return new HashMap<>();
+        return findAll().stream()
+                .collect(Collectors.groupingBy(
+                        t -> t.prioridade().rotulo(),
+                        Collectors.counting()));
     }
 }
